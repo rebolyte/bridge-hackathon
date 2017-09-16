@@ -2,8 +2,10 @@
   <!-- Don't drop "q-app" class -->
   <div id="q-app">
     <div class='navigationbar'>
-      <router-link class='routerlink' to="/">Hello</router-link>
+      <router-link class='routerlink' to="/">Splash</router-link>
       <router-link class='routerlink' to="/page1">Page1</router-link>
+      <router-link class='routerlink' to="/page2">Page2</router-link>
+      <router-link class='routerlink' to="/page3">Page3</router-link>
     </div>
     <router-view class='contentbox'></router-view>
     <div class='somesidebar'/>
@@ -20,7 +22,7 @@ export default {}
 <style lang="stylus">
 
 .routerlink{
-  font-size: 5vh;
+  font-size: 2vh;
   margin-left: 2.5%;
   margin-right: 2.5%;
   font-weight: bold;

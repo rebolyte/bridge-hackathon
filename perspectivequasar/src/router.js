@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 
 import Hello from '@/Hello'
 import Page1 from '@/Page1'
+import Page2 from '@/Page2'
+import Page3 from '@/Page3'
+import Splash from '@/Splash'
 
 
 Vue.use(VueRouter)
@@ -32,13 +35,23 @@ export default new VueRouter({
    routes: [
      {
        path: '/',
-       name: 'Hello',
-       component: Hello
+       name: 'Splash',
+       component: Splash
      },
      {
        path: '/page1',
        name: 'Page1',
        component: Page1
+     },
+     {
+       path: '/page2',
+       name: 'Page2',
+       component: Page2
+     },
+     {
+       path: '/page3',
+       name: 'Page3',
+       component: Page3
      },
    ]
 })

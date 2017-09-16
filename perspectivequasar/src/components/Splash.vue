@@ -1,15 +1,21 @@
 <template>
-  <div class="page1">
+  <div class="splash">
+    <div class='splashtitle' v-bind:style='{fontSize:"4vh", height: "10%", margin: "0%"}'>
+      Hello and Welcome to Perspect😆Iv
+    </div>
     <div class='usernamebar'>
       <q-input v-model='username' v-bind:style='{fontSize: "2vh", width: "60%", left: "20%", height: "10%"}' float-label="Enter Username" placeholder="Platypus"/>
     </div>
     <div class='passwordbar'>
       <q-input v-model="password" v-bind:style='{fontSize: "2vh", width: "60%", left: "20%", height: "10%"}' float-label="Enter Password" placeholder="Secret" type="password"/>
     </div>
-    <div class='passwordbarconfirm'>
-      <q-input v-model="passwordconfirm" v-bind:style='{fontSize: "2vh", width: "60%", left: "20%", height: "10%"}' float-label="Confirm Password" placeholder="Secret" type="password"/>
+    <q-btn class='signbuttons button1' @click="signInMethod">Sign In</q-btn>
+    <div class='notauser'>
+      <p>
+        not a user?
+      </p>
+      <q-btn class='signbuttons' @click="signUpMethod">Sign Up</q-btn>
     </div>
-    <q-btn class='signbuttons button1' @click="makeUser()">Sign Up!</q-btn>
   </div>
 </template>
 
@@ -34,13 +40,11 @@ export default {
     QTooltip,
     QPopover
   },
-  name: 'page1',
+  name: 'splash',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      username: '',
+      username:'',
       password: '',
-      passwordconfirm: '',
     }
   },
   computed:
@@ -51,11 +55,14 @@ export default {
   },
   methods: {
     ...mapActions([
-    'pushtext'
-    ])
-  },
-  makeUser(){
-
+      'pushtext'
+    ]),
+    signInMethod(){
+      console.log('inside signInMethod');
+    },
+    signUpMethod(){
+      console.log('inside signUpMethod');
+    }
   }
 }
 </script>
@@ -63,9 +70,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='stylus'>
 @import '~variables'
-
-.page1
-  position relative
 
 .button1
   position absolute
@@ -98,17 +102,9 @@ export default {
 
 .passwordbar
   position absolute
-  top 50%
+  top 56%
   height 20%
   width 100%
-
-.passwordbarconfirm
-  position absolute
-  top 65%
-  height 20%
-  width 100%
-
-
 
 .splashtitle
   position absolute
@@ -147,4 +143,5 @@ li {
 a {
   color: #42b983;
 }
+
 </style>
