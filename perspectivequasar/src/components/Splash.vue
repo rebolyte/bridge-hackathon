@@ -16,11 +16,16 @@
       </p>
       <q-btn class='signbuttons' @click="signUpMethod">Sign Up</q-btn>
     </div>
+    <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
+      <h4>Achtung!</h4><p>{{modalwarning}}</p>
+      <q-btn color="tertiary" @click="$refs.maximizedModal.close()">Close Me</q-btn>
+    </q-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import axios from 'axios'
 import {
   QInput,
   QToggle,
@@ -28,6 +33,8 @@ import {
   QBtn,
   QField,
   QTooltip,
+  QModal,
+  QModalLayout,
   QPopover
 } from 'quasar'
 export default {
@@ -35,6 +42,8 @@ export default {
     QInput,
     QToggle,
     QIcon,
+    QModal,
+    QModalLayout,
     QField,
     QBtn,
     QTooltip,
@@ -45,6 +54,7 @@ export default {
     return {
       username:'',
       password: '',
+      modalwarning: ''
     }
   },
   computed:
@@ -57,11 +67,30 @@ export default {
     ...mapActions([
       'pushtext'
     ]),
-    signInMethod(){
-      console.log('inside signInMethod');
-    },
     signUpMethod(){
       console.log('inside signUpMethod');
+      this.$router.push('/page1');
+    },
+    signInMethod(){
+      console.log('inside signInMethod');
+      if(this.username===''||this.password===''){
+        this.modalwarning='Username and Password cannot be blank!';
+        this.$refs.maximizedModal.open();
+      }else{
+        axios.post("http://localhost:3000/api/auth/login",{
+          email: this.username,
+          password: this.password
+        })
+        .then((response)=>{
+          console.log('response from login: ', response);
+        })
+        .catch((error)=>{
+          if(error.response.status===401){
+            this.modalwarning='Invalid Login and Password, please try again.'
+            this.$refs.maximizedModal.open();
+          }
+        })
+      }
     }
   }
 }

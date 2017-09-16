@@ -10,11 +10,16 @@
       <q-input v-model="passwordconfirm" v-bind:style='{fontSize: "2vh", width: "60%", left: "20%", height: "10%"}' float-label="Confirm Password" placeholder="Secret" type="password"/>
     </div>
     <q-btn class='signbuttons button1' @click="makeUser()">Sign Up!</q-btn>
+    <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
+      <h4>¡Peligroso!</h4><p>{{modalwarning}}</p>
+      <q-btn color="tertiary" @click="$refs.maximizedModal.close()">Close Me</q-btn>
+    </q-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import axios from 'axios'
 import {
   QInput,
   QToggle,
@@ -22,7 +27,9 @@ import {
   QBtn,
   QField,
   QTooltip,
-  QPopover
+  QPopover,
+  QModal,
+  QModalLayout,
 } from 'quasar'
 export default {
   components: {
@@ -32,7 +39,9 @@ export default {
     QField,
     QBtn,
     QTooltip,
-    QPopover
+    QPopover,
+    QModal,
+    QModalLayout,
   },
   name: 'page1',
   data () {
@@ -41,6 +50,7 @@ export default {
       username: '',
       password: '',
       passwordconfirm: '',
+      modalwarning: ''
     }
   },
   computed:
@@ -51,11 +61,44 @@ export default {
   },
   methods: {
     ...mapActions([
-    'pushtext'
-    ])
-  },
-  makeUser(){
-
+      'pushtext'
+    ]),
+    nextpage(){
+      console.log('inside nextpage()');
+      this.$router.push('/page2');
+    },
+    makeUser(){
+      console.log('inside makeUser');
+      var self = this;
+      if(this.username===''||this.password===''||this.passwordconfirm===''){
+        this.modalwarning = "Username, password and password confirm cannot be blank!";
+        this.$refs.maximizedModal.open();
+      }else{
+        axios.post("http://localhost:3000/api/auth/register",{
+          email: this.username,
+          password: this.password
+        })
+        .then((response)=>{
+          console.log('response from login: ', response.data.error);
+          console.log('response from login: ', response);
+          if(response.statusText==="Created"){
+            localStorage.setItem('userid', response.data.user._id);
+            console.log('value of userid in localStorage', localStorage.getItem('userid'));
+            this.nextpage();
+          }
+          if (response.data.error === "That email address is already in use."){
+            this.modalwarning = "That email address is already in use there cowperson!";
+            this.$refs.maximizedModal.open();
+            this.username = '';
+            this.password = '';
+            this.passwordconfirm = '';
+          }
+        })
+        .catch((error)=>{
+          console.log('error from catch: ', error);
+        })
+      }
+    }
   }
 }
 </script>
