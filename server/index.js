@@ -3,8 +3,16 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var server = require('http').createServer(app);
+var mongoose = require('mongoose');
+var config = require('./config');
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3001;
+
+var connectionString = config.mongo.connectionstring;
+
+mongoose.set('debug', true);
+console.log("connection string : ");
+mongoose.connect(connectionString);
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
