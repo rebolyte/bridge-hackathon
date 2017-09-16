@@ -71,6 +71,10 @@ export default {
       console.log('inside signUpMethod');
       this.$router.push('/page1');
     },
+    nextpage(){
+      console.log('inside nextpage()');
+      this.$router.push('/page2');
+    },
     signInMethod(){
       console.log('inside signInMethod');
       if(this.username===''||this.password===''){
@@ -83,6 +87,9 @@ export default {
         })
         .then((response)=>{
           console.log('response from login: ', response);
+          localStorage.setItem('userid', response.data.user._id);
+          console.log('value of userid in localStorage', localStorage.getItem('userid'));
+          this.nextpage();
         })
         .catch((error)=>{
           if(error.response.status===401){
