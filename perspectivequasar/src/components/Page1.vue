@@ -24,11 +24,11 @@ export default {
   {
     ...mapGetters([
       'sometext'
-    ]),
+    ])
   },
   methods: {
     ...mapActions([
-    'pushtext',
+    'pushtext'
     ])
   }
 }

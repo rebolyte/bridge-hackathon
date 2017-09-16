@@ -1,34 +1,30 @@
 <template>
-  <div class="page1">
+  <div class="hello">
     <h1>
-      Page1 of Perspective
+      Hello and Welcome to Perspect😆Iv
     </h1>
-    <div>
-      <h2>
-        What you typed on homepage {{sometext}}
-      </h2>
-    </div>
+    <textarea :value="sometext" @input="pushtext" placeholder="write ur junk yo"></textarea>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 export default {
-  name: 'page1',
+  name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+
     }
   },
   computed:
   {
     ...mapGetters([
       'sometext'
-    ]),
+    ])
   },
   methods: {
     ...mapActions([
-    'pushtext',
+      'pushtext'
     ])
   }
 }
