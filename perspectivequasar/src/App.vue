@@ -7,6 +7,7 @@
       <router-link class='routerlink' to="/page2">Page2</router-link>
       <router-link class='routerlink' to="/page3">Page3</router-link>
       <router-link class='routerlink' to="/page4">Page4</router-link>
+      <router-link class='routerlink' to="/page5">Page5</router-link>
       <router-link class='routerlink' to="/page6">Page6</router-link>
     </div>
     <router-view class='contentbox'></router-view>

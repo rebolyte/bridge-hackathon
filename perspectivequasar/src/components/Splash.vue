@@ -13,7 +13,8 @@
       <p>
         not a user?
       </p>
-      <q-btn class='signbuttons' @click="signUpMethod">Sign Up</q-btn>
+      <div class='signbuttonblue' @click="signUpMethod">Sign Up</div>
+      <!-- <q-btn class='signbuttons' @click="signUpMethod">Sign Up</q-btn> -->
     </div>
     <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
       <h4>Achtung!</h4><p>{{modalwarning}}</p>
@@ -109,19 +110,25 @@ export default {
 
 .button1
   position absolute
-  top 86%
+  top 80%
   height 5%
   left 17.5%
+  width 65%
+  background-color $warning
 
 
 .page3
   position relative
 
+.signbuttonblue
+  color blue
+  text-decoration underline
+
 
 .notauser
   position absolute
-  top 80%
-  left 57.5%
+  top 87%
+  left 40%
 
 .button2
   position absolute
@@ -159,9 +166,6 @@ export default {
 
 .splash
   position relative
-
-.signbuttons
-  background-color $neutral
 
 .forgotbuttons
   background-color $warning

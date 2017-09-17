@@ -5,49 +5,25 @@
     </div>
     <div class='carouselholder'>
       <q-carousel v-bind:style='{height: "100%"}' infinite arrows dots class="text-white">
-        <div slot="slide" class="bg-primary" v-bind:style='{height: "100%"}'>
-          Slide 1
+        <div slot="slide" class="slide1pic" v-bind:style='{height: "100%", color: "rgb(200,100,0)", fontSize: "3vh"}' v-on:click= "animalchange('Plato')">
+          Click Plato to Choose~!
         </div>
-        <div slot="slide" class="bg-secondary">
-          Slide 2
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 3
-        </div>
-        <div slot="slide" class="bg-primary">
-          Slide 4
-        </div>
-        <div slot="slide" class="bg-secondary">
-          Slide 5
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 6
-        </div>
-        <div slot="slide" class="bg-primary">
-          Slide 7
-        </div>
-        <div slot="slide" class="bg-secondary">
-          Slide 8
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 9
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 10
+        <div slot="slide" class="slide2pic" v-bind:style='{height: "100%", color: "rgb(200,100,0)", fontSize: "3vh"}' v-on:click="animalchange('Porky')">
+          Click Porky to Choose~!
         </div>
       </q-carousel>
-      <div class='animalfeelingtitle'>
+      <div class='animalfeelingtitle' v-if="animalname!=''">
         <p>
-          My spirit buddy is feeling.....
+          My spirit buddy {{animalname}} is feeling.....
         </p>
       </div>
-      <div class='animalfeeling'>
+      <div class='animalfeeling' v-if="animalname!=''">
         <p>
           {{animalfeeling()}}
         </p>
       </div>
     </div>
-    <div class='submitbutton3'>
+    <div class='submitbutton3' v-if="animalname!=''">
       <q-btn class='submitbutton2' @click='submitmethod()'>Submit</q-btn>
     </div>
     <div class='skipbutton3'>
@@ -58,6 +34,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import axios from 'axios'
 import {
   QInput,
   QToggle,
@@ -93,7 +70,10 @@ export default {
       password: '',
       passwordconfirm: '',
       selectAgeGroup: 'ag',
+      animalname: '',
       selectGender: 'g',
+      avatarId: null,
+      adjective: null,
       selectCountry: 'c',
       selectRace: 'r',
       feelingarray: [
@@ -107,7 +87,6 @@ export default {
         'felicitous',
         'bouyant',
         'recyclable',
-        'thatfeelingwhenyouwanttosmellsomethingreallybadeventhoughyouknowitwillbebad',
         'Rocky, just Rocky',
         'tingly',
         'electrostatic',
@@ -262,13 +241,30 @@ export default {
     ]),
     submitmethod(){
       console.log('inside submitmethod');
+      axios.patch('http://localhost:3000/api/user/'+localStorage.getItem('userid'), {
+        avatarId: this.avatarId,
+        adjective: this.adjective
+      })
+      .then((response)=>{
+        this.$router.push('/page4')
+      })
     },
     skipmethod(){
       console.log('inside skipmethod');
+      this.$router.push('/page3')
+    },
+    animalchange(name){
+      this.animalname = name
+      if (name === 'Porky'){
+        this.avatarId = 1
+      }else if (name === 'Plato'){
+        this.avatarId = 0
+      }
     },
     animalfeeling(){
       console.log('inside animalfeeling');
       var number = Math.ceil(Math.random()*this.feelingarray.length)
+      this.adjective = this.feelingarray[number]
       return this.feelingarray[number];
     }
   }
@@ -278,6 +274,20 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='stylus'>
 @import '~variables'
+
+.slide1pic
+  background url('../statics/plato2.png');
+  background-size 50%
+  padding 0%
+  background-position 50% 50%
+  background-repeat no-repeat
+
+.slide2pic
+  background url('../statics/porky2.png');
+  background-size 50%
+  padding 0%
+  background-position 50% 50%
+  background-repeat no-repeat
 
 .page3
   position relative
@@ -303,6 +313,8 @@ export default {
 
 .skipbutton2
   background-color $warning
+
+
 
 .button1
   position absolute

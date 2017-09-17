@@ -32,7 +32,8 @@
       <q-btn class='submitbutton2' @click='submitmethod()'>Submit</q-btn>
     </div>
     <div class='skipbutton'>
-      <q-btn class='skipbutton2' @click='skipmethod()'>Skip</q-btn>
+      <div class='skipbutton2' @click='skipmethod()'>Skip</div>
+      <!-- <q-btn class='skipbutton2' @click='skipmethod()'>Skip</q-btn> -->
     </div>
     <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
       <h4>Hey You!</h4><p>{{modalwarning}}</p>
@@ -308,21 +309,24 @@ export default {
 
 .submitbutton
   position absolute
-  left 5%
-  top 70%
+  right 45%
+  width 30%
+  top 85%
 
 .skipbutton
   position absolute
-  left 5%
-  top 76%
+  right 45%
+  top 92.5%
 
 
 .submitbutton2
-  background-color $neutral
+  background-color $warning
+  width 180%
+
 
 .skipbutton2
-  backgro
-  und-color $warning
+  color blue
+  text-decoration underline
 
 .page3
   position relative

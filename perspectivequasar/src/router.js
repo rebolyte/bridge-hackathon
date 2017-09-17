@@ -6,6 +6,7 @@ import Page1 from '@/Page1'
 import Page2 from '@/Page2'
 import Page3 from '@/Page3'
 import Page4 from '@/Page4'
+import Page5 from '@/Page5'
 import Page6 from '@/Page6'
 import Splash from '@/Splash'
 
@@ -59,6 +60,11 @@ export default new VueRouter({
        path: '/page4',
        name: 'Page4',
        component: Page4
+     },
+     {
+       path: '/page5',
+       name: 'Page5',
+       component: Page5
      },
      {
        path: '/page6',

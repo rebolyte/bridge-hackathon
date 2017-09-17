@@ -115,6 +115,7 @@ export default {
   top 90%
   height 5%
   left 37.5%
+  width 25%
 
 .notauser
   position absolute
@@ -161,7 +162,7 @@ export default {
   position relative
 
 .signbuttons
-  background-color $neutral
+  background-color $warning
 
 .forgotbuttons
   background-color $warning
