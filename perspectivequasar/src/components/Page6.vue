@@ -2,8 +2,10 @@
   <div class="page6">
 
     <div v-for="user in users">
-      <a href="#/page6" @click="setCurRoom(user.roomId)">{{ user.email || 'ecstatic bear' }}</a>
+      <a href="#/page6" @click="setCurRoom(user)">{{ user.email || 'ecstatic bear' }}</a>
     </div>
+
+    <div>You're chatting with {{ curUsername || 'NO ONE' }}</div>
 
     <div id="conversation"></div>
     <input id="data" style="width:200px;" />
@@ -89,12 +91,13 @@ export default {
       });
 
       // listener, whenever the server emits 'updatechat', this updates the chat body
-      self.socket.on('updatechat', function (user, roomId, data) {
-        console.log('updateChat:', user, roomId, data);
+      self.socket.on('updatechat', function (userId, roomId, data) {
+        console.log('updateChat:', userId, roomId, data);
         if (roomId && self.curRoomId) {
           let bothMatch = _.union(roomId.split('-'), self.curRoomId.split('-')).length === 2;
+          let who = userId === self.userId ? 'Me' : 'Them';
           if (bothMatch) {
-            $('#conversation').append('<b>' + user + ':</b> ' + data + '<br>');
+            $('#conversation').append('<b>' + who + ':</b> ' + data + '<br>');
           }
         }
       });
@@ -136,7 +139,8 @@ export default {
       userId: null,
       userProfile: null,
       users: [],
-      curRoomId: null
+      curRoomId: null,
+      curUsername: null,
     }
   },
   computed:
@@ -180,8 +184,9 @@ export default {
           usr.diversityScore = this.calcDifferenceScore(user, usr);
         });
       },
-      setCurRoom(id) {
-        this.curRoomId = id;
+      setCurRoom(user) {
+        this.curRoomId = user.roomId;
+        this.curUsername = user.email;
         $('#users').empty();
       }
   }
