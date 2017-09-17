@@ -1,6 +1,15 @@
 <template>
   <div class="page6">
 
+    <div class='' v-bind:style='{fontSize: "3.5vh", fontWeight: "bold"}'>
+        Chat!
+    </div>
+
+    <div>
+      <p>If someone is within 100 meters of you and has the app open, their username will appear here.
+      Tap on it and start chatting!</p>
+    </div>
+
     <div v-for="user in users">
       <a href="#/page6" @click="setCurRoom(user)">{{ user.email || 'ecstatic bear' }}</a>
     </div>
@@ -10,6 +19,7 @@
     <div id="conversation"></div>
     <input id="data" style="width:200px;" />
     <input type="button" id="datasend" value="send" />
+    <!-- <q-btn v-bind:style='{backgroundColor: "$warning"}' id="datasend">Send</q-btn> -->
 
   </div>
 </template>
