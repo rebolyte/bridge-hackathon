@@ -1,8 +1,13 @@
 <template>
   <div class="page6">
-    <div class='animalcaption' v-bind:style='{fontSize: "3.5vh", fontWeight: "bold"}'>
-        Page4 heyo
+
+    <div v-for="user in users">
+      <a href="#/page6" @click="setCurRoom(user.roomId)">{{ user.email || 'ecstatic bear' }}</a>
     </div>
+
+    <div id="conversation"></div>
+    <input id="data" style="width:200px;" />
+    <input type="button" id="datasend" value="send" />
 
   </div>
 </template>
@@ -11,6 +16,8 @@
 import { mapGetters, mapActions } from 'vuex'
 import _ from 'lodash'
 import axios from 'axios'
+import io from 'socket.io-client'
+import jquery from 'jquery'
 import {
   QInput,
   QToggle,
@@ -41,180 +48,95 @@ export default {
   },
   name: 'page6',
   created(){
-    this.$socket.connect();
+    console.log('created');
+    this.userId = localStorage.getItem('userid')
+    this.socket = io.connect('http://localhost:3000');
+    let self = this;
+
+
+    axios.get('http://localhost:3000/api/user/' + this.userId)
+    .then((response)=>{
+      console.log('user profile: ', response);
+      this.userProfile = response.data.user;
+    })
+    .catch((error)=>{
+      console.log('errrrrr: ', error);
+    })
+
+    this.socket.on('connect', function(){
+      self.geoFindMe();
+      setInterval(self.geoFindMe, 30000);
+
+      self.socket.on('peoplenearby', people => {
+        self.addDiversityScore(self.userProfile, people);
+        console.log('people nearby:', people);
+        self.users = people.map(usr => Object.assign(usr, { roomId: `${usr._id}-${self.userId}` }));
+      });
+
+    // call the server-side function 'adduser' and send one parameter (value of prompt)
+      // when the client emits 'sendchat', this listens and executes
+      self.socket.on('sendchat', function(userId, roomId, data){
+        console.log(userId, data);
+        // we tell the client to execute 'updatechat' with 2 parameters
+        io.sockets.in(self.socket.room).emit('updatechat', this.userId, roomId, data);
+      });
+      self.socket.on('newUser', function(users){
+        console.log('newUser:', users);
+        // $('#users').empty();
+        // $.each(users, function(key, value){
+        //   $('#users').append('<div>' + value + '</div>')
+        // })
+      });
+
+      // listener, whenever the server emits 'updatechat', this updates the chat body
+      self.socket.on('updatechat', function (user, roomId, data) {
+        console.log('updateChat:', user, roomId, data);
+        if (roomId && self.curRoomId) {
+          let bothMatch = _.union(roomId.split('-'), self.curRoomId.split('-')).length === 2;
+          if (bothMatch) {
+            $('#conversation').append('<b>' + user + ':</b> ' + data + '<br>');
+          }
+        }
+      });
+      // this is for the users!
+      // this.socket.on('updaterooms', function(rooms, current_room) {
+      //   console.log('updateRooms:', rooms, current_room);
+      // });
+      //on page load call this function
+      $(function(){
+        // when the client clicks SEND
+        $('#datasend').click( function() {
+          var message = $('#data').val();
+          $('#data').val('');
+          console.log(this.userId);
+          // tell server to execute 'sendchat' and send along one parameter
+          self.socket.emit('sendchat', self.userId, self.curRoomId, message);
+        });
+        // when the client hits ENTER on their keyboard
+        $('#data').keypress(function(e) {
+          if(e.which == 13) {
+            $(this).blur();
+            $('#datasend').focus().click();
+          }
+        });
+      });
+    });
   },
-  sockets:{
-    connect: function(){
-      console.log('socket connected')
-    },
-    customEmit: function(val){
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
-    }
-  },
+  // sockets:{
+  //   connect: function(){
+  //     console.log('socket connected')
+  //   },
+  //   customEmit: function(val){
+  //     console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+  //   }
+  // },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      checklgtbq: false,
-      chunkedinterests: [],
-      username: '',
-      password: '',
-      passwordconfirm: '',
-      selectAgeGroup: 'ag',
-      selectGender: 'g',
-      selectCountry: 'c',
-      selectRace: 'r',
-      feelingarray: [
-        'feisty',
-        'gassy',
-        'bitey',
-        'goodhairday',
-        'fabtabulous',
-        'wonky',
-        'urbane',
-        'felicitous',
-        'bouyant',
-        'recyclable',
-        'thatfeelingwhenyouwanttosmellsomethingreallybadeventhoughyouknowitwillbebad',
-        'Rocky, just Rocky',
-        'tingly',
-        'electrostatic',
-      ],
-      sendAgeGroup: null,
-      sendGender: null,
-      sendCountry: null,
-      sendRace: null,
-      optionsAgeGroup: [
-        {
-          label: 'Age Group',
-          value: 'ag'
-        },
-        {
-          label: '18-25',
-          value: '25'
-        },
-        {
-          label: '25-30',
-          value: '30'
-        },
-        {
-          label: '30-50',
-          value: '50'
-        },
-        {
-          label: '50-65',
-          value: '65'
-        },
-        {
-          label: '65+',
-          value: '65+'
-        },
-        {
-          label: 'Immortal',
-          value: 'im'
-        },
-        {
-          label: "Don&#39;t want to say",
-          value: "-1"
-        }
-      ],
-      optionsGender: [
-        {
-          label: 'Gender',
-          value: 'g'
-        },
-        {
-          label: 'boy',
-          value: 'b'
-        },
-        {
-          label: 'girl',
-          value: 'gi'
-        },
-        {
-          label: 'transgender',
-          value: 'tg'
-        },
-        {
-          label: 'nonbinary',
-          value: 'nb'
-        },
-        {
-          label: 'martian',
-          value: 'm'
-        },
-        {
-          label: "Dont&#39;t want to say",
-          value: "-1"
-        }
-      ],
-      optionsCountry: [
-        {
-          label: 'Continent',
-          value: 'c'
-        },
-        {
-          label: 'North America',
-          value: 'na'
-        },
-        {
-          label: "Latin America",
-          value: 'la'
-        },
-        {
-          label: 'Asia',
-          value: 'as'
-        },
-        {
-          label: 'Africa',
-          value: 'af'
-        },
-        {
-          label: 'Europe',
-          value: 'eu'
-        },
-        {
-          label: 'Atlantis',
-          value: 'at'
-        },
-        {
-          label: "Dont&#39;t want to say",
-          value: "-1"
-        }
-      ],
-      optionsRace: [
-        {
-          label: 'Color',
-          value: 'r'
-        },
-        {
-          label: 'White',
-          value: 'w'
-        },
-        {
-          label: 'Black',
-          value: 'bl'
-        },
-        {
-          label: 'Orange',
-          value: 'or'
-        },
-        {
-          label: 'Brown',
-          value: 'br'
-        },
-        {
-          label: 'Purple',
-          value: 'pu'
-        },
-        {
-          label: 'Lizard Person',
-          value: 'lp'
-        },
-        {
-          label: "Dont&#39;t want to say",
-          value: "-1"
-        }
-      ]
+      socket: null,
+      userId: null,
+      userProfile: null,
+      users: [],
+      curRoomId: null
     }
   },
   computed:
@@ -227,17 +149,41 @@ export default {
     ...mapActions([
       'pushtext'
     ]),
-    submitmethod(){
-      console.log('inside submitmethod');
-    },
-    skipmethod(){
-      console.log('inside skipmethod');
-    },
-    animalfeeling(){
-      console.log('inside animalfeeling');
-      var number = Math.ceil(Math.random()*this.feelingarray.length)
-      return this.feelingarray[number];
-    }
+    geoFindMe() {
+      let self = this;
+        if (!navigator.geolocation){
+          console.error('Geolocation not supported in this browser');
+          return;
+        }
+
+        function geoSuccess(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+          self.socket.emit('location', latitude, longitude, self.userId);
+
+        }
+
+        function geoError() {
+          console.error('Error in geo location');
+        }
+        navigator.geolocation.getCurrentPosition(geoSuccess, geoError, {
+          enableHighAccuracy: true,
+          maximumAge        : 30000,
+          timeout           : 27000
+        });
+      },
+      calcDifferenceScore(userA, userB) {
+        return _.difference(_.values(userA.privateInfo), _.values(userB.privateInfo)).length;
+      },
+      addDiversityScore(user, users) {
+        return users.map(usr => {
+          usr.diversityScore = this.calcDifferenceScore(user, usr);
+        });
+      },
+      setCurRoom(id) {
+        this.curRoomId = id;
+        $('#users').empty();
+      }
   }
 }
 </script>
