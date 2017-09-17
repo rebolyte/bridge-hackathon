@@ -1,69 +1,22 @@
 <template>
-  <div class="page3">
+  <div class="page4">
     <div class='animalcaption' v-bind:style='{fontSize: "3.5vh", fontWeight: "bold"}'>
-        Pick Your Spirit Animule 😆
+        Page4 heyo
     </div>
-    <div class='carouselholder'>
-      <q-carousel v-bind:style='{height: "100%"}' infinite arrows dots class="text-white">
-        <div slot="slide" class="bg-primary" v-bind:style='{height: "100%"}'>
-          Slide 1
-        </div>
-        <div slot="slide" class="bg-secondary">
-          Slide 2
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 3
-        </div>
-        <div slot="slide" class="bg-primary">
-          Slide 4
-        </div>
-        <div slot="slide" class="bg-secondary">
-          Slide 5
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 6
-        </div>
-        <div slot="slide" class="bg-primary">
-          Slide 7
-        </div>
-        <div slot="slide" class="bg-secondary">
-          Slide 8
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 9
-        </div>
-        <div slot="slide" class="bg-tertiary">
-          Slide 10
-        </div>
-      </q-carousel>
-      <div class='animalfeelingtitle'>
-        <p>
-          My spirit buddy is feeling.....
-        </p>
-      </div>
-      <div class='animalfeeling'>
-        <p>
-          {{animalfeeling()}}
-        </p>
-      </div>
-    </div>
-    <div class='submitbutton3'>
-      <q-btn class='submitbutton2' @click='submitmethod()'>Submit</q-btn>
-    </div>
-    <div class='skipbutton3'>
-      <q-btn class='skipbutton2' @click='skipmethod()'>Skip</q-btn>
-    </div>
+
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import _ from 'lodash'
 import {
   QInput,
   QToggle,
   QIcon,
   QBtn,
   QField,
+  Toast,
   QSelect,
   QCarousel,
   QCheckbox,
@@ -81,10 +34,15 @@ export default {
     QIcon,
     QBtn,
     QCheckbox,
+    Toast,
     QTooltip,
     QPopover
   },
   name: 'page3',
+  created(){
+    var checkit = _.chunk(['a', 'b', 'c', 'd'], 2);
+    console.log('checkit: ', checkit);
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -280,6 +238,9 @@ export default {
 @import '~variables'
 
 .page3
+  position relative
+
+.page4
   position relative
 
 .submitbutton3

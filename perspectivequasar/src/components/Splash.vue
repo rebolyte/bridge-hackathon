@@ -73,7 +73,7 @@ export default {
     },
     nextpage(){
       console.log('inside nextpage()');
-      this.$router.push('/page2');
+      // this.$router.push('/page2');
     },
     signInMethod(){
       console.log('inside signInMethod');
@@ -112,6 +112,11 @@ export default {
   top 78%
   height 5%
   left 37.5%
+
+
+.page3
+  position relative
+
 
 .notauser
   position absolute

@@ -27,17 +27,24 @@
     <div class='skipbutton'>
       <q-btn class='skipbutton2' @click='skipmethod()'>Skip</q-btn>
     </div>
+    <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
+      <h4>Hey You!</h4><p>{{modalwarning}}</p>
+      <q-btn color="tertiary" @click="$refs.maximizedModal.close()">Close Me</q-btn>
+    </q-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import axios from 'axios'
 import {
   QInput,
   QToggle,
   QIcon,
   QBtn,
   QField,
+  QModal,
+  QModalLayout,
   QSelect,
   QCheckbox,
   QTooltip,
@@ -50,6 +57,8 @@ export default {
     QSelect,
     QField,
     QToggle,
+    QModal,
+    QModalLayout,
     QIcon,
     QBtn,
     QCheckbox,
@@ -57,6 +66,15 @@ export default {
     QPopover
   },
   name: 'page2',
+  created(){
+    axios.get("http://localhost:3000/api/user/"+localStorage.getItem('userid'))
+    .then((response)=>{
+      console.log('response value is: ', response);
+    })
+    .catch((error)=>{
+      console.log('error value is: ', error);
+    })
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -68,6 +86,7 @@ export default {
       selectGender: 'g',
       selectCountry: 'c',
       selectRace: 'r',
+      modalwarning: '',
       sendAgeGroup: null,
       sendGender: null,
       sendCountry: null,
@@ -95,7 +114,7 @@ export default {
         },
         {
           label: '65+',
-          value: '65+'
+            value: '65+'
         },
         {
           label: 'Immortal',
@@ -214,11 +233,44 @@ export default {
   },
   methods: {
     ...mapActions([
-    'pushtext'
-    ])
-  },
-  makeUser(){
+      'pushtext'
+    ]),
+    submitmethod(){
+      // localhost:3000/api/user/59bd568c16899434b72c71ed
+      console.log('value of selectgender: ', this.selectGender);
+      console.log('value of this.selectAgeGroup: ', this.selectAgeGroup);
+      console.log('value of this.selectCountry: ', this.selectCountry);
+      console.log('value this.selectRace: ', this.selectRace);
 
+      if(this.selectGender==='g'||this.selectAgeGroup==='ag'||this.selectCountry==='c'||this.selectRace==='r'){
+        this.modalwarning = 'Please select a value for each area or say, "Nah, I do not want to answer". You can also skip this section and fill it in some other time.'
+        this.$refs.maximizedModal.open();
+      }else{
+        var url = "http://localhost:3000/api/user/"+localStorage.getItem('userid');
+
+        console.log('url is : ', url);
+
+        axios.patch(url, {
+          privateInfo: {
+            ageGroup: this.selectAgeGroup,
+            gender: this.selectGender,
+            country: this.selectCountry,
+            race: this.selectRace,
+            lgtbq: this.checklgtbq
+          }
+        })
+        .then((response)=>{
+          console.log('response from patch is ', response);
+          this.$router.push('/page3')
+        })
+        .catch(()=>{
+          console.log('error from patch is ', error);
+        })
+      }
+    },
+    skipmethod(){
+      this.$router.push('/page3')
+    }
   }
 }
 </script>
@@ -226,6 +278,11 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='stylus'>
 @import '~variables'
+
+
+.page3
+  position relative
+
 
 .submitbutton
   position absolute
@@ -242,7 +299,8 @@ export default {
   background-color $neutral
 
 .skipbutton2
-  background-color $warning
+  backgro
+  und-color $warning
 
 .page3
   position relative

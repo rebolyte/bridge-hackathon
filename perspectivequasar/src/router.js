@@ -5,6 +5,7 @@ import Hello from '@/Hello'
 import Page1 from '@/Page1'
 import Page2 from '@/Page2'
 import Page3 from '@/Page3'
+import Page4 from '@/Page4'
 import Splash from '@/Splash'
 
 
@@ -52,6 +53,11 @@ export default new VueRouter({
        path: '/page3',
        name: 'Page3',
        component: Page3
+     },
+     {
+       path: '/page4',
+       name: 'Page4',
+       component: Page4
      },
    ]
 })
