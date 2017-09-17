@@ -1,48 +1,15 @@
 <template>
-  <div class="page2">
-    <div class='toplogo' v-bind:style='{ position: "absolute", top: "5%", left: "43%", height: "14%", width: "15%"}'/>
-    <div class='usernamebar1'>
-      <q-select
-          v-model="selectAgeGroup"
-          :options="optionsAgeGroup"
-        />
+  <div class="page6">
+    <div class='animalcaption' v-bind:style='{fontSize: "3.5vh", fontWeight: "bold"}'>
+        Page4 heyo
     </div>
-    <div class='usernamebar2'>
-      <q-select
-          v-model="selectGender"
-          :options="optionsGender"
-        />
-    </div>
-    <div class='usernamebar3'>
-      <q-select
-          v-model="selectCountry"
-          :options="optionsCountry"
-        />
-    </div>
-    <div class='usernamebar4'>
-      <q-select
-          v-model="selectRace"
-          :options="optionsRace"
-        />
-    </div>
-    <div class='checkboxlgbtq'>
-       <q-checkbox v-model="checklgtbq" color="secondary" label="Identify as LGTBQ+" />
-    </div>
-    <div class='submitbutton'>
-      <q-btn class='submitbutton2' @click='submitmethod()'>Submit</q-btn>
-    </div>
-    <div class='skipbutton'>
-      <q-btn class='skipbutton2' @click='skipmethod()'>Skip</q-btn>
-    </div>
-    <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
-      <h4>Hey You!</h4><p>{{modalwarning}}</p>
-      <q-btn color="tertiary" @click="$refs.maximizedModal.close()">Close Me</q-btn>
-    </q-modal>
+
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import _ from 'lodash'
 import axios from 'axios'
 import {
   QInput,
@@ -50,9 +17,9 @@ import {
   QIcon,
   QBtn,
   QField,
-  QModal,
-  QModalLayout,
+  Toast,
   QSelect,
+  QCarousel,
   QCheckbox,
   QTooltip,
   QPopover
@@ -63,37 +30,32 @@ export default {
     QInput,
     QSelect,
     QField,
+    QCarousel,
     QToggle,
-    QModal,
-    QModalLayout,
     QIcon,
     QBtn,
     QCheckbox,
+    Toast,
     QTooltip,
     QPopover
   },
-  name: 'page2',
-  beforeCreate(){
-    axios.get("http://localhost:3000/api/user/"+localStorage.getItem('userid'))
-    .then((response)=>{
-      console.log('response value is: ', response);
-      console.log('ageGroup', response.data.user.privateInfo===undefined);
-      if(response.data.user.privateInfo!==undefined){
-          this.selectAgeGroup = response.data.user.privateInfo.ageGroup;
-          this.selectCountry = response.data.user.privateInfo.country;
-          this.selectGender = response.data.user.privateInfo.gender;
-          this.checklgtbq = response.data.user.privateInfo.lgtbq;
-          this.selectRace = response.data.user.privateInfo.race
-      }
-    })
-    .catch((error)=>{
-      console.log('error value is: ', error);
-    })
+  name: 'page6',
+  created(){
+    this.$socket.connect();
+  },
+  sockets:{
+    connect: function(){
+      console.log('socket connected')
+    },
+    customEmit: function(val){
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+    }
   },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
       checklgtbq: false,
+      chunkedinterests: [],
       username: '',
       password: '',
       passwordconfirm: '',
@@ -101,7 +63,22 @@ export default {
       selectGender: 'g',
       selectCountry: 'c',
       selectRace: 'r',
-      modalwarning: '',
+      feelingarray: [
+        'feisty',
+        'gassy',
+        'bitey',
+        'goodhairday',
+        'fabtabulous',
+        'wonky',
+        'urbane',
+        'felicitous',
+        'bouyant',
+        'recyclable',
+        'thatfeelingwhenyouwanttosmellsomethingreallybadeventhoughyouknowitwillbebad',
+        'Rocky, just Rocky',
+        'tingly',
+        'electrostatic',
+      ],
       sendAgeGroup: null,
       sendGender: null,
       sendCountry: null,
@@ -129,7 +106,7 @@ export default {
         },
         {
           label: '65+',
-            value: '65+'
+          value: '65+'
         },
         {
           label: 'Immortal',
@@ -251,40 +228,15 @@ export default {
       'pushtext'
     ]),
     submitmethod(){
-      // localhost:3000/api/user/59bd568c16899434b72c71ed
-      console.log('value of selectgender: ', this.selectGender);
-      console.log('value of this.selectAgeGroup: ', this.selectAgeGroup);
-      console.log('value of this.selectCountry: ', this.selectCountry);
-      console.log('value this.selectRace: ', this.selectRace);
-
-      if(this.selectGender==='g'||this.selectAgeGroup==='ag'||this.selectCountry==='c'||this.selectRace==='r'){
-        this.modalwarning = 'Please select a value for each area or say, "Nah, I do not want to answer". You can also skip this section and fill it in some other time.'
-        this.$refs.maximizedModal.open();
-      }else{
-        var url = "http://localhost:3000/api/user/"+localStorage.getItem('userid');
-
-        console.log('url is : ', url);
-
-        axios.patch(url, {
-          privateInfo: {
-            ageGroup: this.selectAgeGroup,
-            gender: this.selectGender,
-            country: this.selectCountry,
-            race: this.selectRace,
-            lgtbq: this.checklgtbq
-          }
-        })
-        .then((response)=>{
-          console.log('response from patch is ', response);
-          this.$router.push('/page3')
-        })
-        .catch(()=>{
-          console.log('error from patch is ', error);
-        })
-      }
+      console.log('inside submitmethod');
     },
     skipmethod(){
-      this.$router.push('/page3')
+      console.log('inside skipmethod');
+    },
+    animalfeeling(){
+      console.log('inside animalfeeling');
+      var number = Math.ceil(Math.random()*this.feelingarray.length)
+      return this.feelingarray[number];
     }
   }
 }
@@ -294,38 +246,37 @@ export default {
 <style scoped lang='stylus'>
 @import '~variables'
 
-
-.page2
+.page3
   position relative
-  background url('../statics/onboarding-1-bg.jpg')
-  background-size cover
-  background-repeat no-repeat
 
-.toplogo
-  background url('../statics/logo-icon.png')
-  background-size cover
-  background-repeat no-repeat
+.page4
+  position relative
 
-.submitbutton
+.page6
+  position relative
+
+
+.submitbutton3
   position absolute
   left 5%
-  top 70%
+  top 90%
 
-.skipbutton
+.skipbutton3
+  position absolute
+  left 30%
+  top 90%
+
+.animalcaption
   position absolute
   left 5%
-  top 76%
+  top 15%
 
 
 .submitbutton2
   background-color $neutral
 
 .skipbutton2
-  backgro
-  und-color $warning
-
-.page3
-  position relative
+  background-color $warning
 
 .button1
   position absolute
@@ -350,33 +301,12 @@ export default {
   height 5%
   left 53%
 
-.usernamebar1
+.carouselholder
   position absolute
-  height 20%
+  height 40%
   top 25%
-  left 10%
-  width 80%
-
-.usernamebar2
-  position absolute
-  height 20%
-  top 35%
-  left 10%
-  width 80%
-
-.usernamebar3
-  position absolute
-  height 20%
-  top 45%
-  left 10%
-  width 80%
-
-.usernamebar4
-  position absolute
-  height 20%
-  top 55%
-  left 10%
-  width 80%
+  width 100%
+  text-align center
 
 .passwordbar
   position absolute
@@ -392,10 +322,8 @@ export default {
 
 .checkboxlgbtq
   position: absolute
-  top 70%
-  left 25%
-
-
+  top 65%
+  left 0%
 
 .splashtitle
   position absolute

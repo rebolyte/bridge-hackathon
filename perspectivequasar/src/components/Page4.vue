@@ -10,6 +10,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import _ from 'lodash'
+import axios from 'axios'
 import {
   QInput,
   QToggle,
@@ -40,6 +41,16 @@ export default {
   },
   name: 'page3',
   created(){
+
+    axios.get('http://localhost:3000/api/interest/interests')
+    .then((response)=>{
+      console.log('response from interests: ', response);
+      this.chunkedinterests = _.chunk(response.data.interests, 3);
+    })
+    .catch((error)=>{
+      console.log('error from interests: ', error);
+    })
+
     var checkit = _.chunk(['a', 'b', 'c', 'd'], 2);
     console.log('checkit: ', checkit);
   },
@@ -47,6 +58,7 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       checklgtbq: false,
+      chunkedinterests: [],
       username: '',
       password: '',
       passwordconfirm: '',
@@ -234,7 +246,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='stylus'>
+<style scoped lang='stylus'>
 @import '~variables'
 
 .page3

@@ -104,7 +104,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='stylus'>
+<style scoped lang='stylus'>
 @import '~variables'
 
 .page1
@@ -112,7 +112,7 @@ export default {
 
 .button1
   position absolute
-  top 78%
+  top 90%
   height 5%
   left 37.5%
 
@@ -136,22 +136,20 @@ export default {
 .usernamebar
   position absolute
   height 20%
-  top 34%
+  top 60%
   width 100%
 
 .passwordbar
   position absolute
-  top 50%
+  top 70%
   height 20%
   width 100%
 
 .passwordbarconfirm
   position absolute
-  top 65%
+  top 80%
   height 20%
   width 100%
-
-
 
 .splashtitle
   position absolute

@@ -7,9 +7,9 @@
       <router-link class='routerlink' to="/page2">Page2</router-link>
       <router-link class='routerlink' to="/page3">Page3</router-link>
       <router-link class='routerlink' to="/page4">Page4</router-link>
+      <router-link class='routerlink' to="/page6">Page6</router-link>
     </div>
     <router-view class='contentbox'></router-view>
-    <div class='somesidebar'/>
   </div>
 </template>
 
@@ -30,20 +30,17 @@ export default {}
   text-decoration: none;
 }
 .navigationbar{
-  grid-column: 2 / 3;
+  grid-column: 1 / 3;
   grid-row: 1 / 2;
   background-color: skyblue;
   padding-top: 0.75%;
 }
-.somesidebar{
-  grid-column: 1 / 2;
-  grid-row: 1 / 3;
-  background-color: tomato;
-}
 .contentbox{
-  grid-column: 2 / 3;
+  grid-column: 1 / 3;
   grid-row: 2 / 3;
-  background-color: grey;
+  background url('./statics/sign_in.jpg')
+  background-size cover
+  background-repeat no-repeat
 }
 #q-app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

@@ -1,7 +1,6 @@
 <template>
   <div class="splash">
-    <div class='splashtitle' v-bind:style='{fontSize:"4vh", height: "10%", margin: "0%"}'>
-      Hello and Welcome to Perspect😆Iv
+    <div class='splashtitle' v-bind:style='{fontSize:"4vh", margin: "0%"}'>
     </div>
     <div class='usernamebar'>
       <q-input v-model='username' v-bind:style='{fontSize: "2vh", width: "60%", left: "20%", height: "10%"}' float-label="Enter Username" placeholder="Platypus"/>
@@ -26,6 +25,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
+import logo from '../statics/quasar-logo.png'
 import {
   QInput,
   QToggle,
@@ -104,14 +104,14 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='stylus'>
+<style scoped lang='stylus'>
 @import '~variables'
 
 .button1
   position absolute
-  top 78%
+  top 86%
   height 5%
-  left 37.5%
+  left 17.5%
 
 
 .page3
@@ -120,8 +120,8 @@ export default {
 
 .notauser
   position absolute
-  top 85%
-  left 37.5%
+  top 80%
+  left 57.5%
 
 .button2
   position absolute
@@ -138,20 +138,24 @@ export default {
 .usernamebar
   position absolute
   height 20%
-  top 34%
+  top 60%
   width 100%
 
 .passwordbar
   position absolute
-  top 56%
+  top 70%
   height 20%
   width 100%
 
 .splashtitle
   position absolute
-  height 10%
-  top 2%
-  width 100%
+  height 12.5%
+  top 15%
+  left 25%
+  width 53%
+  background url('../statics/logo.svg')
+  background-size cover
+  background-repeat no-repeat
 
 .splash
   position relative
